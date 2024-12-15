@@ -14,10 +14,11 @@ class User(UserMixin,db.Model):
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
-    profile_image = db.Column(db.String(20,default='default.jpg'), nullable=False)
+    profile_image = db.Column(db.String(64),default='default_profile.jpg', nullable=False)
     email = db.Column(db.String(64), nullable=False, unique=True,index=True)
     username = db.Column(db.String(64), nullable=False, unique=True,index=True)
     password_hash = db.Column(db.String(256))
+
 
     posts = db.relationship('BlogPost', backref='author', lazy=True)
 
@@ -35,11 +36,13 @@ class User(UserMixin,db.Model):
 
 class BlogPost(db.Model):
 
-    __tablename__ = 'blog_posts'
+    # __tablename__ = 'blog_posts'
 
-    users = db.relationship('User')
+    users = db.relationship(User)
+
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.INteger,db.ForeignKey('users.id'), nullable=False)
+    user_id = db.Column(db.Integer,db.ForeignKey('users.id'), nullable=False)
+
     date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     title = db.Column(db.String(200), nullable=False)
     text = db.Column(db.Text, nullable=False)
